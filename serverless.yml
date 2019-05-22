@@ -1,4 +1,4 @@
-service: hello-world-jon # NOTE: update this with your service name
+service: workshop-jon # NOTE: update this with your service name
 
 #stage: dev
 #region: us-east-1
@@ -22,39 +22,6 @@ provider:
       Action: execute-api:Invoke
       Resource: arn:aws:execute-api:#{AWS::Region}:#{AWS::AccountId}:*/*/GET/restaurants
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
-
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
-
 functions:
   search-restaurants:
     handler: functions/search-restaurants.handler
@@ -65,7 +32,7 @@ functions:
             arn: arn:aws:cognito-idp:#{AWS::Region}:#{AWS::AccountId}:userpool/us-east-1_3T4PzC39G
           method: post
     environment:
-      restaurants_table: restaurants-jon
+      restaurants_table: ${ssm:/${self:service}/${opt:stage}/table_name}
   get-index:
     handler: functions/get-index.handler
     events:
@@ -79,8 +46,8 @@ functions:
           - - "https://"
             - Ref: ApiGatewayRestApi
             - ".execute-api.${opt:region}.amazonaws.com/${opt:stage}/restaurants"
-      cognito_user_pool_id: us-east-1_3T4PzC39G
-      cognito_client_id: 5bbrva6nellhslfvn1ei4s6o4i
+      cognito_user_pool_id: ${ssm:/${self:service}/${opt:stage}/cognito_user_pool_id}
+      cognito_client_id: ${ssm:/${self:service}/${opt:stage}/cognito_web_client_id}
 
   get-restaurants:
     handler: functions/get-restaurants.handler
@@ -90,7 +57,7 @@ functions:
           method: get
           authorizer: aws_iam
     environment:
-      restaurants_table: restaurants-jon
+      restaurants_table: ${ssm:/${self:service}/${opt:stage}/table_name}
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -133,7 +100,7 @@ resources:
     restaurantsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: restaurants-jon
+        TableName: ${ssm:/${self:service}/${opt:stage}/table_name}
         AttributeDefinitions:
           - AttributeName: name
             AttributeType: S
