@@ -1,0 +1,29 @@
+{
+  "name": "Sparkol",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sls": "serverless",
+    "test": "TEST_MODE=handler ./node_modules/.bin/mocha tests/test_cases --reporter spec",
+    "acceptance": "TEST_MODE=http ./node_modules/.bin/mocha tests/test_cases --reporter spec"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.459.0",
+    "aws4": "^1.8.0",
+    "mustache": "^3.0.1",
+    "superagent": "^5.0.5",
+    "superagent-promise": "^1.1.0"
+  },
+  "devDependencies": {
+    "awscred": "^1.4.2",
+    "chai": "^4.2.0",
+    "cheerio": "^1.0.0-rc.3",
+    "lodash": "^4.17.11",
+    "mocha": "^6.1.4",
+    "serverless-pseudo-parameters": "^2.4.0"
+  }
+}
