@@ -21,6 +21,7 @@
   "devDependencies": {
     "awscred": "^1.4.2",
     "chai": "^4.2.0",
+    "chance": "^1.0.18",
     "cheerio": "^1.0.0-rc.3",
     "lodash": "^4.17.11",
     "mocha": "^6.1.4",
